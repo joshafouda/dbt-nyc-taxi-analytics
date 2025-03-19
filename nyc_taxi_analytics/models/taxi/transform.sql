@@ -1,6 +1,6 @@
 {{ config(
     materialized='external',
-    location='output/trips_2023_01_transformed.parquet',
+    location='output/trips_2024_12_transformed.parquet',
     format='parquet'
 ) }}
 
@@ -25,7 +25,7 @@ filtered_data AS (
 transformed_data AS (
     SELECT
         -- Correction : éviter le doublon `passenger_count`
-        CAST(passenger_count AS BIGINT) AS passenger_count,
+        CAST(passenger_count AS INTEGER) AS passenger_count,
 
         -- Traduction des méthodes de paiement
         CASE
@@ -48,7 +48,7 @@ final_data AS (
         CAST(CAST(tpep_dropoff_datetime AS DATE) AS TEXT) AS dropoff_date,
 
         -- Utilisation de la variable Jinja pour l’année
-        CAST({{ var('year') }} AS BIGINT) AS year
+        CAST({{ var('year') }} AS INTEGER) AS year
     FROM transformed_data
     WHERE
         -- Garder uniquement les trajets qui commencent et finissent dans l'année cible
