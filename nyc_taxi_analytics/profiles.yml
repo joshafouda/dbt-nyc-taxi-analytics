@@ -1,0 +1,7 @@
+nyc_taxi_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: './output/nyc_taxi_transformed_data.db' # Chemin du fichier de base de données DuckDB
+      schema: 'main'  # Nom du schéma par défaut
