@@ -58,3 +58,4 @@ final_data AS (
 )
 
 SELECT * EXCLUDE (pickup_date, dropoff_date, year, month) FROM final_data
+WHERE trip_duration_minutes > 0
