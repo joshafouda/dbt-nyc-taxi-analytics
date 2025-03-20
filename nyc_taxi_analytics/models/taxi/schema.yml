@@ -30,6 +30,9 @@ models:
           - not_null
           - dbt_expectations.expect_column_values_to_be_between:
               min_value: 1
+          -  dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: BIGINT
+              
 
       - name: payment_method
         description: "Translated payment method."
@@ -70,6 +73,7 @@ models:
         tests:
           - not_null
 
+
       - name: tolls_amount
         description: "The amount of tolls paid in trip."
         tests:
@@ -99,4 +103,3 @@ models:
         description: "The airport fee paid in trip."
         tests:
           - not_null
-
