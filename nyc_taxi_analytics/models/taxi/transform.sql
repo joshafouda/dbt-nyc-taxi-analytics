@@ -25,7 +25,7 @@ filtered_data AS (
 transformed_data AS (
     SELECT
         -- Correction : éviter le doublon `passenger_count`
-        CAST(passenger_count AS INTEGER) AS passenger_count,
+        CAST(passenger_count AS BIGINT) AS passenger_count,
 
         -- Traduction des méthodes de paiement
         CASE
@@ -47,16 +47,14 @@ final_data AS (
         CAST(CAST(tpep_pickup_datetime AS DATE) AS TEXT) AS pickup_date,
         CAST(CAST(tpep_dropoff_datetime AS DATE) AS TEXT) AS dropoff_date,
 
-        -- Utilisation de la variable Jinja pour l’année
-        CAST({{ var('year') }} AS INTEGER) AS year
+        -- Variables dynamiques pour l'année et le mois
+        CAST({{ var('year') }} AS TEXT) AS year,
+        LPAD(CAST({{ var('month') }} AS TEXT), 2, '0') AS month  -- Ajout du zéro si nécessaire
     FROM transformed_data
-    WHERE
-        -- Garder uniquement les trajets qui commencent et finissent dans l'année cible
-        ((pickup_date BETWEEN CAST(year AS TEXT) || '-01-01' AND CAST(year AS TEXT) || '-12-31')
-        AND (dropoff_date BETWEEN CAST(year AS TEXT) || '-01-01' AND CAST(year AS TEXT) || '-12-31'))
-
-        -- OU garder ceux qui commencent le 31 décembre de l'année précédente et finissent le 1er janvier de l'année cible
-        OR (pickup_date = CAST(year - 1 AS TEXT) || '-12-31' AND dropoff_date = CAST(year AS TEXT) || '-01-01')
+    WHERE 
+        -- Garder uniquement les trajets qui commencent et finissent dans le mois et l'année cible
+        pickup_date BETWEEN year || '-' || month || '-01' AND year || '-' || month || '-31'
+        AND dropoff_date BETWEEN year || '-' || month || '-01' AND year || '-' || month || '-31'
 )
 
-SELECT * EXCLUDE (pickup_date, dropoff_date, year) FROM final_data
+SELECT * EXCLUDE (pickup_date, dropoff_date, year, month) FROM final_data
