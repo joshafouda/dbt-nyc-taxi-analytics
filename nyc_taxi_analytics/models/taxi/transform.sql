@@ -1,6 +1,6 @@
 {{ config(
     materialized='external',
-    location='output/trips_2024_12_transformed.parquet',
+    location='output/trips_{{ var("year") }}_{{ var("month") }}_transformed.parquet',
     format='parquet'
 ) }}
 
@@ -53,8 +53,8 @@ final_data AS (
     FROM transformed_data
     WHERE 
         -- Garder uniquement les trajets qui commencent et finissent dans le mois et l'année cible
-        pickup_date BETWEEN year || '-' || month || '-01' AND year || '-' || month || '-31'
-        AND dropoff_date BETWEEN year || '-' || month || '-01' AND year || '-' || month || '-31'
+        pickup_date BETWEEN '{{ var("year") }}-{{ var("month") }}-01' AND '{{ var("year") }}-{{ var("month") }}-31'
+        AND dropoff_date BETWEEN '{{ var("year") }}-{{ var("month") }}-01' AND '{{ var("year") }}-{{ var("month") }}-31'
 )
 
 SELECT * EXCLUDE (pickup_date, dropoff_date, year, month) FROM final_data
