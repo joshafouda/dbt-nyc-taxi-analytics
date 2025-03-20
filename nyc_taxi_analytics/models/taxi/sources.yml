@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: tlc
     meta:
-      external_location: 'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2024-12.parquet'
+      external_location: 'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{{ var("year") }}-{{ var("month") }}.parquet'
       formatter: oldstyle
     tables:
       - name: transform_file
