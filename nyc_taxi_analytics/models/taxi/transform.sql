@@ -1,6 +1,6 @@
 {{ config(
     materialized='external',
-    location='output/trips_{{ var("year") }}_{{ var("month") }}_transformed.parquet',
+    location='output/trips_2024_transformed.parquet',
     format='parquet'
 ) }}
 
@@ -44,18 +44,15 @@ transformed_data AS (
 
 final_data AS (
     SELECT *,
-        CAST(CAST(tpep_pickup_datetime AS DATE) AS TEXT) AS pickup_date,
-        CAST(CAST(tpep_dropoff_datetime AS DATE) AS TEXT) AS dropoff_date,
+        CAST(tpep_pickup_datetime AS DATE) AS pickup_date,
+        CAST(tpep_dropoff_datetime AS DATE) AS dropoff_date,
 
-        -- Variables dynamiques pour l'année et le mois
-        CAST({{ var('year') }} AS TEXT) AS year,
-        LPAD(CAST({{ var('month') }} AS TEXT), 2, '0') AS month  -- Ajout du zéro si nécessaire
     FROM transformed_data
     WHERE 
-        -- Garder uniquement les trajets qui commencent et finissent dans le mois et l'année cible
-        pickup_date BETWEEN '{{ var("year") }}-{{ var("month") }}-01' AND '{{ var("year") }}-{{ var("month") }}-31'
-        AND dropoff_date BETWEEN '{{ var("year") }}-{{ var("month") }}-01' AND '{{ var("year") }}-{{ var("month") }}-31'
+        -- Garder uniquement les trajets qui commencent et finissent en 2024
+        pickup_date >= '2024-01-01' AND pickup_date < '2025-01-01'
+        AND dropoff_date >= '2024-01-01' AND dropoff_date < '2025-01-01'
 )
 
-SELECT * EXCLUDE (pickup_date, dropoff_date, year, month) FROM final_data
+SELECT * EXCLUDE (pickup_date, dropoff_date) FROM final_data
 WHERE trip_duration_minutes > 0

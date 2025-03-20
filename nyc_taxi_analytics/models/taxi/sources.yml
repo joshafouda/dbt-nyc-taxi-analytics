@@ -3,7 +3,13 @@ version: 2
 sources:
   - name: tlc
     meta:
-      external_location: 'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{{ var("year") }}-{{ var("month") }}.parquet'
+      external_location: >
+        (FROM read_parquet(
+          list_transform(
+            range(1, 13),  
+            m -> 'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2024-' || lpad(m::text, 2, '0') || '.parquet' 
+          )
+        ))
       formatter: oldstyle
     tables:
       - name: transform_file

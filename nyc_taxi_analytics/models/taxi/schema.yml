@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: transform
-    description: "Dataset des trajets en taxi jaune de New York au cours de {{ var('month') }}/{{ var('year') }}"
+    description: "Dataset des trajets en taxi jaune de New York au cours de l'année 2024."
     columns:
       - name: tpep_pickup_datetime
         description: "The date and time when the meter was engaged."

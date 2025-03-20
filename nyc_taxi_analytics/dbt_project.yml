@@ -35,7 +35,4 @@ models:
     taxi:
       +materialized: view
 
-vars:
-  year: "2024"
-  month: "06"
   
