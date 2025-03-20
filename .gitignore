@@ -175,4 +175,4 @@ cython_debug/
 
 *.parquet
 
-*.db
+nyc_taxi_analytics/output/nyc_taxi_transformed_data.db
